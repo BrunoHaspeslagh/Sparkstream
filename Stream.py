@@ -122,7 +122,7 @@ def countvehicles(edge):
     for lane in edge.lanes:
         for veh in lane.Vehicles:
             tot+=1
-    return "{tot}"
+    return str(tot)
 
 
 
