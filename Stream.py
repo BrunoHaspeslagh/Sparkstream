@@ -137,7 +137,7 @@ def writeline(line):
     session.close()
 
 def writeToNeo(rdd):
-    dt.foreach(lambda line: writeline(line))
+    rdd.foreach(lambda line: writeline(line))
 
 sc = SparkContext(appName="Streaming")
 ssc = StreamingContext(sc, 10)
