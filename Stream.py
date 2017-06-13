@@ -131,6 +131,7 @@ def countvehicles(edge):
 driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
 
 def writeline(line):
+    print(line)
     v = line.id
     session = driver.session()
     session.run("CREATE (n:Node {value: {v} })", {'v': v})
