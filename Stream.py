@@ -125,16 +125,16 @@ def countvehicles(edge):
             tot+=1
     return str(tot)
 
-
+"""The issue is that you are calling the Spark context from within a task, which is not allowed?"""
 
 driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
 
 def writeline(line):
     v = line.id
-    session = driver.session()
-    session.run("CREATE (n:Node {value: {v} })", {'v': v})
-    session.close()
-    return "CREATE {n:Node {value: {v}})"
+    #session = driver.session()
+    #session.run("CREATE (n:Node {value: {v} })", {'v': v})
+    #session.close()
+    return "doing something..."
 
 
 sc = SparkContext(appName="Streaming")
