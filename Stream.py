@@ -127,8 +127,7 @@ def countvehicles(edge):
 
 
 
-
-"""
+driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
 
 def writeline(line):
     v = line.id
@@ -148,30 +147,4 @@ res = edges.map(lambda edge: writeline(edge))
 res.pprint()
 #edges.pprint()
 ssc.start()
-ssc.awaitTermination()"""
-
-
-driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
-
-sc = SparkContext()
-batch = []
-max = None
-processed = 0
-
-def writeBatch(b):
-    print("writing batch of " + str(len(b)))
-    session = driver.session()
-    session.run('UNWIND {batch} AS elt CREATE (n:Node {v: elt})', {'batch': b})
-    session.close()
-
-def write2neo(v):
-    batch.append(v)
-    global processed
-    processed += 1
-    if len(batch) >= 500 or processed >= max:
-        writeBatch(batch)
-        batch[:] = []
-
-dt = sc.parallelize(range(1, 2136))
-max = dt.count()
-dt.foreach(write2neo)
+ssc.awaitTermination()
