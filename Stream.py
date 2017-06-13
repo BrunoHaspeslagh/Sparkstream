@@ -1,6 +1,7 @@
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 import xml.etree.ElementTree as ET
+from neo4j.v1 import GraphDatabase, basic_auth
 
 
 class Vehicle(object):
@@ -127,11 +128,23 @@ def countvehicles(edge):
 
 
 
+driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
+
+def writeline(line):
+    v = line.id
+    session = driver.session()
+    session.run("CREATE (n:Node {value: {v} })", {'v': v})
+    session.close()
+
+def writeToNeo(rdd):
+    dt.foreach(lambda line: writeline(line))
 
 sc = SparkContext(appName="Streaming")
 ssc = StreamingContext(sc, 10)
-lines = ssc.socketTextStream("172.23.80.245", 5580)
-edges = lines.flatMap(lambda xml: XmlParser.parsefullxml(xml)).map(lambda edge:"aantal wagens: "+ countvehicles(edge))
+lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))
+edges = lines.map(lambda edge:"aantal wagens: "+ countvehicles(edge))
+
+lines.foreachRDD(lambda rdd:writeToNeo(rdd))
 
 edges.pprint()
 ssc.start()
