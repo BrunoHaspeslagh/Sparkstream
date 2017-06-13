@@ -1,5 +1,6 @@
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
+"""
 import xml.etree.ElementTree as ET
 
 
@@ -123,6 +124,8 @@ def countvehicles(edge):
         for veh in lane.Vehicles:
             tot+=1
     return tot
+"""
+
 
 
 
