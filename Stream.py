@@ -131,7 +131,7 @@ def countvehicles(edge):
 sc = SparkContext(appName="Streaming")
 ssc = StreamingContext(sc, 10)
 lines = ssc.socketTextStream("172.23.80.245", 5580)
-edges = lines.flatMap(lambda xml: XmlParser.parsefullxml(xml)).map(lambda edge:"aantal wagens: "+ countvehicles(edge))
+edges = lines.flatMap(lambda xml: XmlParser.parsefullxml(xml)).map(lambda edge:countvehicles(edge))
 
 edges.pprint()
 
