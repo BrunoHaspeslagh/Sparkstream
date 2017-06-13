@@ -135,6 +135,7 @@ def writeline(line):
     session = driver.session()
     session.run("CREATE (n:Node {value: {v} })", {'v': v})
     session.close()
+    return "CREATE {n:Node {value: {v}})"
 
 
 sc = SparkContext(appName="Streaming")
