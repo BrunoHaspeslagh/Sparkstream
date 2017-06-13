@@ -128,7 +128,7 @@ def countvehicles(edge):
 
 
 
-"""driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
+"""
 
 def writeline(line):
     v = line.id
@@ -150,6 +150,8 @@ res.pprint()
 ssc.start()
 ssc.awaitTermination()"""
 
+
+driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
 
 sc = SparkContext()
 batch = []
