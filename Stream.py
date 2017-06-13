@@ -127,13 +127,14 @@ def countvehicles(edge):
 
 """The issue is that you are calling the Spark context from within a task, which is not allowed?"""
 
-driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j","Swh^bdl"), encrypted=False)
+
 
 def writeline(line):
-    v = line.id
+    #v = line.id
+    #driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
     #session = driver.session()
     #session.run("CREATE (n:Node {value: {v} })", {'v': v})
-    #session.close()
+    session.close()
     return "doing something..."
 
 
