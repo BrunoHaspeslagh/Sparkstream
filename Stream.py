@@ -140,7 +140,7 @@ def writeline(line):
     return str(id)
 
 
-sc = SparkContext(appName="Streaming")
+sc = SparkContext(appName="Roaddata")
 ssc = StreamingContext(sc, 10)
 ssc.checkpoint("file:///tmp/spark")
 lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))
