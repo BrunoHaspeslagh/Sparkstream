@@ -168,7 +168,7 @@ def calculateWeight(edge):
     weight.id = edge.id
     vehCount = 0
     for lane in edge.lanes:
-        for veh in lane.vehicles:
+        for veh in lane.Vehicles:
             vehCount += 1
     #TODO: extra weight calculations go here
     weight.val = vehCount
