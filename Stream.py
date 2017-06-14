@@ -131,12 +131,12 @@ def countvehicles(edge):
 
 
 def writeline(line):
-    #v = line.id
-    driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
-    session = driver.session()
-    session.run("CREATE (n:Node {value: {v} })", {'v': v})
-    session.close()
-    return "doing something..."
+    v = line.id
+    #driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
+    #session = driver.session()
+    #session.run("CREATE (n:Node {value: {v} })", {'v': v})
+    #session.close()
+    return str(v)
 
 
 sc = SparkContext(appName="Streaming")
