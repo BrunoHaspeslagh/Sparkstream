@@ -142,11 +142,11 @@ def writeline(line):
 
 sc = SparkContext(appName="Roaddata")
 ssc = StreamingContext(sc, 10)
-ssc.checkpoint("")
+
 lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))
 edges = lines.map(lambda edge:"aantal wagens: "+ countvehicles(edge))
 
-res = lines.map(lambda edge: writeline(edge)).countByWindow(10,10).map(lambda count: "edges updated:" + str(count))
+res = lines.map(lambda edge: writeline(edge)) #.countByWindow(10,10).map(lambda count: "edges updated:" + str(count))
 
 res.pprint()
 #edges.pprint()
