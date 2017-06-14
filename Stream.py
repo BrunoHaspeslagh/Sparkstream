@@ -3,6 +3,33 @@ from pyspark.streaming import StreamingContext
 import xml.etree.ElementTree as ET
 from neo4j.v1 import GraphDatabase, basic_auth
 import neo4j.v1.security
+import json
+
+class ParkingLot(object):
+    name = "Default"
+    free = 0
+    max = 0
+
+    lat = 0
+    long = 0
+
+    entrances = []
+    def __init__(self, naam="Default",free=0 ,max = 0 , lat = 0 , lon = 0):
+        self.name = naam
+        self.lat = lat
+        self.long = lon
+        self.max = max
+        self.free = free
+
+    @staticmethod
+    def parsefromjson(jsonstring):
+
+        j = json.loads(jsonstring)
+        lots = []
+        for lot in j["parkingLots"]:
+            lots.append(ParkingLot(lot["name"], lot["free"]))
+
+        return lots
 
 
 class Vehicle(object):
@@ -129,26 +156,42 @@ def countvehicles(edge):
 """The issue is that you are calling the Spark context from within a task, which is not allowed?"""
 
 
+def calculateWeight(edge):
+    weight = object()
+    weight.id = edge.id
+    vehCount = 0
+    for lane in edge.lanes:
+        for veh in lane.vehicles:
+            vehCount += 1
+    #TODO: extra weight calculations go here
+    weight.val = vehCount
+    return weights
 
 def writeline(line):
     id = line.id
-    weight = 5     #TODO:place calculateweight here
+    weight = line.weight
     driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
     session = driver.session()
     session.run("MATCH ()-[r{id: {id}}]-() SET r.weight = {weight}", {'id': id, 'weight': weight})
     session.close()
     return str(id)
 
+def writeParking(parking):
+    name = parking.name
+    free = parking.free
+    driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
+    session = driver.session()
+    session.run("MATCH(n{name: {name}}) SET n.free = {free}", {'name': name, 'free': free})
+    return name
 
 sc = SparkContext(appName="Roaddata")
 ssc = StreamingContext(sc, 10)
 
-lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))
-edges = lines.map(lambda edge:"aantal wagens: "+ countvehicles(edge))
+lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))\
+    .map(lambda edge: calculateWeight(edge)).map(lambda weight: writeline(weight))
 
-res = lines.map(lambda edge: writeline(edge)) #.countByWindow(10,10).map(lambda count: "edges updated:" + str(count))
+parkings = ssc.socketTextStream("172.23.80.245", 5581).flatmap(lambda json: ParkingLot.parsefromjson(json))\
+    .map(lambda parking: writeParking(parking))
 
-res.pprint()
-#edges.pprint()
 ssc.start()
 ssc.awaitTermination()
