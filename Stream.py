@@ -156,8 +156,15 @@ def countvehicles(edge):
 """The issue is that you are calling the Spark context from within a task, which is not allowed?"""
 
 
+class Weight(Object):
+    id = 0
+    weight = 0
+    def __init__(self):
+        self.id = 0
+        self.weight = 0
+
 def calculateWeight(edge):
-    weight = object()
+    weight = Weight()
     weight.id = edge.id
     vehCount = 0
     for lane in edge.lanes:
