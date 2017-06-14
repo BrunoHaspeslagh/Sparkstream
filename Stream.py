@@ -192,6 +192,6 @@ lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParse
 
 parkings = ssc.socketTextStream("172.23.80.245", 5581).flatMap(lambda json: ParkingLot.parsefromjson(json))\
     .map(lambda parking: writeParking(parking))
-
+lines.pprint()
 ssc.start()
 ssc.awaitTermination()
