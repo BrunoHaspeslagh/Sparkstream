@@ -131,12 +131,13 @@ def countvehicles(edge):
 
 
 def writeline(line):
-    v = line.id
+    id = line.id
+    weight = 5     #TODO:place calculateweight here
     driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
     session = driver.session()
-    session.run("CREATE (n:Node {value: {v} })", {'v': v})
+    session.run("MATCH ()-[r{id: {id}}]-() SET r.Weight = {weight}", {'id': id, 'weight': weight})
     session.close()
-    return str(v)
+    return str(id)
 
 
 sc = SparkContext(appName="Streaming")
@@ -144,7 +145,7 @@ ssc = StreamingContext(sc, 10)
 lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))
 edges = lines.map(lambda edge:"aantal wagens: "+ countvehicles(edge))
 
-res = lines.map(lambda edge: writeline(edge))
+res = lines.map(lambda edge: writeline(edge)).countByWindow(10,10).map(lambda count: "edges updated:" + str(count))
 
 res.pprint()
 #edges.pprint()
