@@ -144,7 +144,7 @@ ssc = StreamingContext(sc, 10)
 lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))
 edges = lines.map(lambda edge:"aantal wagens: "+ countvehicles(edge))
 
-res = edges.map(lambda edge: writeline(edge))
+res = lines.map(lambda edge: writeline(edge))
 
 res.pprint()
 #edges.pprint()
