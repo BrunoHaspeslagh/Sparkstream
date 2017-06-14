@@ -2,6 +2,7 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 import xml.etree.ElementTree as ET
 from neo4j.v1 import GraphDatabase, basic_auth
+import neo4j.v1.security
 
 
 class Vehicle(object):
