@@ -172,7 +172,7 @@ def calculateWeight(edge):
             vehCount += 1
     #TODO: extra weight calculations go here
     weight.val = vehCount
-    return weights
+    return weight
 
 def writeline(line):
     id = line.id
