@@ -135,7 +135,7 @@ def writeline(line):
     weight = 5     #TODO:place calculateweight here
     driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
     session = driver.session()
-    session.run("MATCH ()-[r{id: {id}}]-() SET r.Weight = {weight}", {'id': id, 'weight': weight})
+    session.run("MATCH ()-[r{id: {id}}]-() SET r.weight = {weight}", {'id': id, 'weight': weight})
     session.close()
     return str(id)
 
