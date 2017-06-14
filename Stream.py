@@ -142,6 +142,7 @@ def writeline(line):
 
 sc = SparkContext(appName="Streaming")
 ssc = StreamingContext(sc, 10)
+ssc.checkpoint("file:///tmp/spark")
 lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))
 edges = lines.map(lambda edge:"aantal wagens: "+ countvehicles(edge))
 
