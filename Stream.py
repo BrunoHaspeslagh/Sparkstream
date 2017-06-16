@@ -188,7 +188,7 @@ def writeParking(parking):
     free = parking.free
     driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False)
     session = driver.session()
-    session.run("MATCH(n{name: {name}}) SET n.free = {free}", {'name': name, 'free': free})
+    session.run("MATCH(n{parkingName: {name}}) SET n.free = {free}", {'name': name, 'free': free})
     return name
 
 sc = SparkContext(appName="Roaddata")
