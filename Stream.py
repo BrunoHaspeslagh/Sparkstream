@@ -157,21 +157,20 @@ def countvehicles(edge):
 
 
 class Weight(object):
-    id = 0
-    weight = 0
-    def __init__(self):
-        self.id = 0
-        self.weight = 0
+    def __init__(self, id, weight):
+        self.id = id
+        self.weight = weight
 
 def calculateWeight(edge):
-    weight = Weight()
-    weight.id = edge.id
+
+    id = edge.id
     vehCount = 0
     for lane in edge.lanes:
         for veh in lane.Vehicles:
             vehCount += 1
     #TODO: extra weight calculations go here
-    weight.val = vehCount
+    val = vehCount
+    weight = Weight(id, val)
     return weight
 
 def writeline(line):
