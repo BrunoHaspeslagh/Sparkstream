@@ -193,7 +193,7 @@ def writeParking(parking):
 
 sc = SparkContext(appName="Roaddata")
 ssc = StreamingContext(sc, 10)
-
+driver = GraphDatabase.driver("bolt://pint-n2:7687", auth=basic_auth("neo4j", "Swh^bdl"), encrypted=False) #connectiontest
 lines = ssc.socketTextStream("172.23.80.245", 5580).flatMap(lambda xml: XmlParser.parsefullxml(xml))\
     .map(lambda edge: calculateWeight(edge)).map(lambda weight: writeline(weight))
 
